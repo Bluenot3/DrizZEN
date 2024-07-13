@@ -1,0 +1,165 @@
+<html><head><base href="https://exoskinvr.com/" />
+<title>ExoSkin VR - Immersive Music Experience</title>
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Exo 2', sans-serif;
+  background: #000;
+  color: #0ff;
+}
+.vr-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.vr-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none;
+}
+.video-sphere {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300vw;
+  height: 300vh;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.78);
+  width: 100%;
+  height: 100%;
+}
+.controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  background: rgba(0,255,255,0.2);
+  border: 2px solid #0ff;
+  color: #0ff;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn:hover {
+  background: rgba(0,255,255,0.4);
+  box-shadow: 0 0 15px #0ff;
+}
+.info {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  text-shadow: 0 0 10px #0ff;
+}
+.pulse {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0,255,255,0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0,255,255,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0,255,255,0);
+  }
+}
+</style>
+</head>
+<body>
+<div class="info">
+  <h1>ExoSkin VR</h1>
+  <p>Experience: "Lucid Dreaming"</p>
+</div>
+<div class="vr-container">
+  <div class="video-sphere">
+    <div class="video-container">
+      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/7rFnd2MfWyc?si=QGR0_6iv2PFoPeDk&autoplay=1&loop=1&playlist=7rFnd2MfWyc&controls=0&showinfo=0&rel=0&modestbranding=1" title="Lucid Dreaming Experience" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="vr-overlay"></div>
+</div>
+<div class="controls">
+  <button class="btn pulse" onclick="toggleImmersion()">Toggle Immersion</button>
+  <button class="btn" onclick="adjustView('left')">Look Left</button>
+  <button class="btn" onclick="adjustView('right')">Look Right</button>
+  <button class="btn" onclick="adjustView('up')">Look Up</button>
+  <button class="btn" onclick="adjustView('down')">Look Down</button>
+</div>
+
+<script>
+let isImmersive = true;
+let viewAngleX = 0;
+let viewAngleY = 0;
+
+function toggleImmersion() {
+  const videoSphere = document.querySelector('.video-sphere');
+  const videoContainer = document.querySelector('.video-container');
+  
+  isImmersive = !isImmersive;
+  
+  if (isImmersive) {
+    videoSphere.style.width = '300vw';
+    videoSphere.style.height = '300vh';
+    videoContainer.style.transform = 'translate(-50%, -50%) scale(1.78)';
+  } else {
+    videoSphere.style.width = '100vw';
+    videoSphere.style.height = '100vh';
+    videoContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+  }
+}
+
+function adjustView(direction) {
+  const videoContainer = document.querySelector('.video-container');
+  const stepSize = 5;
+  
+  switch(direction) {
+    case 'left':
+      viewAngleX = Math.max(viewAngleX - stepSize, -45);
+      break;
+    case 'right':
+      viewAngleX = Math.min(viewAngleX + stepSize, 45);
+      break;
+    case 'up':
+      viewAngleY = Math.max(viewAngleY - stepSize, -45);
+      break;
+    case 'down':
+      viewAngleY = Math.min(viewAngleY + stepSize, 45);
+      break;
+  }
+  
+  videoContainer.style.transform = `translate(-50%, -50%) scale(1.78) rotateY(${viewAngleX}deg) rotateX(${viewAngleY}deg)`;
+}
+
+// Add pulsating effect to the environment
+setInterval(() => {
+  const overlay = document.querySelector('.vr-overlay');
+  overlay.style.opacity = 0.5 + Math.sin(Date.now() / 1000) * 0.2;
+}, 16);
+</script>
+
+</body></html>
